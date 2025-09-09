@@ -4,7 +4,7 @@
 
 - Sử dụng hai tham số: `LIMIT` (số lượng bản ghi) và `OFFSET` (bỏ qua bao nhiêu bản ghi)
 
-- Ví dụ câu lệnh query: `SELECT * FROM users LIMIT 10 OFFSET 20`
+- Ví dụ câu lệnh query: <pre> ``` SELECT * FROM users LIMIT 10 OFFSET 20 ``` </pre>
 
 # Ưu điểm:
 
@@ -15,6 +15,10 @@
 - Hiệu năng kém với OFFSET lớn: Database phải đếm và bỏ qua nhiều bản ghi
 
 - Khi có dữ liệu mới được thêm/xóa, có thể bị trùng lặp hoặc thiếu dữ liệu (khi xoá thì bản ghi đầu tiên của trang sau sẽ bị đẩy lên trang trước làm khi chuyển sang trang sau bị thiếu dữ liệu)
+
+<pre> ```md | ID | Name | Created_at | |----|---------|------------| | 1 | A | 2024-01-01 | | 2 | B | 2024-01-02 | | 3 | C | 2024-01-03 | | 4 | D | 2024-01-04 | | 5 | E | 2024-01-05 | | 6 | F | 2024-01-06 | | 7 | G | 2024-01-07 | | 8 | H | 2024-01-08 | ``` </pre>
+
+Khi user xem trang 1 với `LIMIT = 3 OFFSET = 0`, cùng lúc đó `id = 1` bị xoá. Khi đó sang trang 2 sẽ bắt đầu với `id = 5` làm `id = 4` biến mất.
 
 - Tốn tài nguyên: OFFSET càng lớn càng chậm
 
@@ -32,11 +36,11 @@
 
 - Ví dụ query: 
 
-    + ID: <pre> ```sql SELECT * FROM users WHERE id > 1000 LIMIT 10 ``` </pre>
+    + ID: <pre> ``` SELECT * FROM users WHERE id > 1000 LIMIT 10 ``` </pre>
 
-    + Timestamp: <pre> ```sql SELECT * FROM posts WHERE created_at < '2025-09-09 17:00:00'; ``` </pre>
+    + Timestamp: <pre> ``` SELECT * FROM posts WHERE created_at < '2025-09-09 17:00:00'; ``` </pre>
 
-    + Composite key (khi trùng timestamp): <pre> ```sql SELECT * FROM posts WHERE created_at < '2025-09-09 12:00:00' OR (created_at = '2025-09-09 12:00:00' AND id < 42); ``` </pre>
+    + Composite key (khi trùng timestamp): <pre> ``` SELECT * FROM posts WHERE created_at < '2025-09-09 12:00:00' OR (created_at = '2025-09-09 12:00:00' AND id < 42); ``` </pre>
 
 (Kết hợp `ORDER BY` để lọc được chính xác)
 
